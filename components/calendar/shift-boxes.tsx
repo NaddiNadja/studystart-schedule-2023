@@ -62,6 +62,7 @@ const AlignedRow = styled.div`
     flex-wrap: wrap;
     width: 100%;
     justify-content: space-between;
+    gap: 4px;
 `;
 
 const ShiftBox = styled.div<{
@@ -84,12 +85,13 @@ const ShiftBox = styled.div<{
     position: absolute;
     overflow: hidden;
     &:hover {
-        min-height: 50px;
+        min-height: 70px;
+        z-index: 5;
     }
 `;
 
 const TimeLabel = styled.span`
-    padding-top: 3px;
+    padding-top: 2px;
     font-size: 12px;
     word-wrap: break-word;
 `;
