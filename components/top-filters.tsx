@@ -26,21 +26,22 @@ const TopFilters: React.FC<Props> = ({
         const person = schedule?.find(({ person }) => person === selected);
         if (!person) return;
 
-        await pdf(<MyDocument shifts={person.shifts} person={selected} />)
-            .toBlob()
-            .then(blob =>
-                saveAs(
-                    blob,
-                    `introweek-schedule-${selected
-                        .replace(".", "")
-                        .replace(/[(].*[)]/, "")
-                        .trim()
-                        .replace(" ", "-")
-                        .toLowerCase()}`
-                )
-            );
-        // const pdfUrl = URL.createObjectURL(blob);
-        // window.open(pdfUrl, "_blank");
+        const blob = await pdf(
+            <MyDocument shifts={person.shifts} person={selected} />
+        ).toBlob();
+        // .then(blob =>
+        //     saveAs(
+        //         blob,
+        //         `introweek-schedule-${selected
+        //             .replace(".", "")
+        //             .replace(/[(].*[)]/, "")
+        //             .trim()
+        //             .replace(" ", "-")
+        //             .toLowerCase()}`
+        //     )
+        // );
+        const pdfUrl = URL.createObjectURL(blob);
+        window.open(pdfUrl, "_blank");
     };
 
     return (
