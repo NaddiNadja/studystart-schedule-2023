@@ -2,6 +2,7 @@ import Calendar from "components/calendar";
 import TimeTable from "components/time-table";
 import TopFilters from "components/top-filters";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
+import Head from "next/head";
 import React from "react";
 import createSchedule from "scripts/create-schedule";
 import getPeople from "scripts/get-people";
@@ -13,6 +14,7 @@ const Home = ({
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
     const [selected, setSelected] = React.useState("");
     const [view, setView] = React.useState(true);
+    const [title, setTitle] = React.useState("Schedule for the study start");
 
     React.useEffect(() => {
         if (typeof "window" !== undefined) {
@@ -22,6 +24,11 @@ const Home = ({
             if (view) setView(view === "true");
         }
     }, []);
+
+    React.useEffect(() => {
+        if (selected.length) setTitle(`${selected}'s schedule`);
+        else setTitle("Schedule for the study start");
+    }, [selected]);
 
     const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSelected(e.target.value);
@@ -36,6 +43,9 @@ const Home = ({
 
     return (
         <main>
+            <Head>
+                <title>{title}</title>
+            </Head>
             <TopFilters
                 schedule={schedule}
                 selected={selected}

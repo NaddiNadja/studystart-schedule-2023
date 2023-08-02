@@ -7,7 +7,6 @@ import "@fontsource/inter/300.css";
 import "@fontsource/inter/400.css";
 import "@fontsource/inter/500.css";
 import "@fontsource/inter/600.css";
-import { test2 } from "scripts/overlapping-shifts";
 
 export default function MyApp({ Component, pageProps }: AppProps) {
     return <Component {...pageProps} />;
