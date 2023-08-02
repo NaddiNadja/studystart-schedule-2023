@@ -9,7 +9,8 @@ const createPersonalShifts = (
     schedule_pr_group: Map<string, Shift[]>
 ) => {
     var shifts: Shift[] = [];
-    var isAcademic = data.group1.includes("academic");
+    var isAcademic =
+        data.group1.includes("academic") || data.group2.includes("academic");
     var group_shifts = schedule_pr_group.get(data.group1);
     if (!group_shifts)
         throw new Error(`An unkown group name was given: ${data.group1}`);
@@ -17,12 +18,44 @@ const createPersonalShifts = (
 
     const addShift = (note: string, dataGroup?: string) => {
         if (dataGroup && dataGroup.length) {
-            var group_shifts = schedule_pr_group.get(dataGroup);
-            if (!group_shifts)
+            var shifts_in_group = schedule_pr_group.get(dataGroup);
+            if (!shifts_in_group)
                 throw new Error(`An unkown group name was given: ${dataGroup}`);
-            const shifts_with_notes = addNote(group_shifts, note).filter(
-                shift => !isAcademic || !shift.title.includes("Walker meeting")
-            );
+            const shifts_with_notes = addNote(shifts_in_group, note)
+                .filter(
+                    shift =>
+                        !isAcademic ||
+                        (!shift.title.includes("Walker meeting") &&
+                            !shift.title.includes("Grill shift briefing"))
+                )
+                .filter(shift => {
+                    if (!shift.title.includes("Walker meeting")) return true;
+                    if (
+                        !!shifts.find(s =>
+                            s.title.includes("Escape Room - Setup")
+                        )
+                    )
+                        return false;
+                    return true;
+                })
+                .filter(shift => {
+                    if (!shift.title.includes("Game masters + Helpers meeting"))
+                        return true;
+                    if (!!shifts.find(s => s.title.includes("Task master")))
+                        return false;
+                    return true;
+                })
+                .filter(shift => {
+                    if (!shift.title.includes("Meet at Islands Brygge"))
+                        return true;
+                    if (
+                        !!shifts.find(s =>
+                            s.title.includes("Meet at Islands Brygge")
+                        )
+                    )
+                        return false;
+                    return true;
+                });
             shifts = [...shifts, ...shifts_with_notes];
         }
     };
@@ -60,7 +93,7 @@ const createPersonalShifts = (
             date: "25-Aug",
             start: "02:00",
             end: "03:00",
-            note: "",
+            note: "(everyone)",
             title: "Friday cleanup",
         },
     ];
