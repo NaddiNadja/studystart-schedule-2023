@@ -85,8 +85,11 @@ const ShiftBox = styled.div<{
     position: absolute;
     overflow: hidden;
     &:hover {
-        min-height: 70px;
+        min-height: calc(${({ height }) => height} / 870 * 100% - 3px);
+        height: fit-content;
         z-index: 5;
+        padding-bottom: 10px;
+        background: var(--primary-line);
     }
 `;
 
