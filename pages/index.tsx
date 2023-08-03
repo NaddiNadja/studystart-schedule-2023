@@ -1,5 +1,6 @@
 import Calendar from "components/calendar";
 import TimeTable from "components/time-table";
+import TopBar from "components/top-bar";
 import TopFilters from "components/top-filters";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import Head from "next/head";
@@ -46,6 +47,7 @@ const Home = ({
             <Head>
                 <title>{title}</title>
             </Head>
+            <TopBar />
             <TopFilters
                 schedule={schedule}
                 selected={selected}

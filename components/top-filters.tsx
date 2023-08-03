@@ -82,6 +82,7 @@ const Container = styled.section`
     gap: 10px;
     align-items: center;
     padding: 30px;
+    padding-top: 16px;
     width: 500px;
     max-width: 100%;
 `;

@@ -13,6 +13,11 @@ export type PersonalSchedule = {
     shifts: Shift[];
 };
 
+export type SharedShift = {
+    shift: Shift;
+    people: string[];
+};
+
 export type groupLine = {
     name: string;
     group1: string;

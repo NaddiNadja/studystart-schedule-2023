@@ -1,5 +1,3 @@
-import fs from "fs";
-import csv from "csv-parser";
 import { Shift, PersonalSchedule, groupLine, groupSchLine } from "./types";
 import { createShifts } from "./create-group-shifts";
 import createPersonalShifts from "./create-personal-shifts";
