@@ -102,12 +102,26 @@ const styles = StyleSheet.create({
     noborder: {
         borderTop: "none",
     },
-    time: {
+    column: {
+        display: "flex",
+        flexDirection: "column",
+        gap: "4px",
         width: "68pt",
+    },
+    time: {
+        width: "100%",
         textAlign: "right",
     },
+    location: {
+        width: "100%",
+        textAlign: "right",
+        fontSize: "8pt",
+    },
     content: {
-        width: "40%",
+        width: "34%",
+    },
+    content20: {
+        width: "23%",
     },
 });
 
@@ -122,21 +136,36 @@ const MyDocument: React.FC<Props> = ({ shifts, person }) => (
                         <Text style={styles.h2}>{day}</Text>
                     </View>
                     {shifts
-                        .filter(e => e.date === date)
-                        .map((e, i) => (
+                        .filter(shift => shift.date === date)
+                        .map((shift, i) => (
                             <View
-                                key={e.title}
+                                key={shift.title}
                                 style={
                                     i === 0
                                         ? { ...styles.row, ...styles.noborder }
                                         : styles.row
                                 }
                             >
-                                <Text style={styles.time}>
-                                    {e.start}-{e.end}
+                                <View style={styles.column}>
+                                    <Text style={styles.time}>
+                                        {shift.start}-{shift.end}
+                                    </Text>
+                                    <Text style={styles.location}>
+                                        {shift.location}
+                                    </Text>
+                                </View>
+                                <Text style={styles.content}>
+                                    {shift.title}
                                 </Text>
-                                <Text style={styles.content}>{e.title}</Text>
-                                <Text style={styles.content}>{e.note}</Text>
+                                <Text style={styles.content20}>
+                                    {shift.playbook &&
+                                        shift.playbook.length && (
+                                            <>Playbook: {shift.playbook}</>
+                                        )}
+                                </Text>
+                                <Text style={styles.content20}>
+                                    {shift.note}
+                                </Text>
                             </View>
                         ))}
                     {!shifts.filter(e => e.date === date).length && (

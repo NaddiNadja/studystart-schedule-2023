@@ -15,17 +15,31 @@ const TimeTable: React.FC<Props> = ({ shifts }) => {
                 <Table key={i}>
                     <tbody>
                         <tr>
-                            <TH colSpan={3}>{day}</TH>
+                            <TH colSpan={4}>{day}</TH>
                         </tr>
                         {shifts
                             .filter(shift => shift.date === date)
                             .map((shift, index) => (
                                 <TR key={index}>
                                     <TDtime valign="top">
-                                        {shift.start}-{shift.end}
+                                        <Column>
+                                            <span>
+                                                {shift.start}-{shift.end}
+                                            </span>
+                                            <Location>
+                                                {shift.location}
+                                            </Location>
+                                        </Column>
                                     </TDtime>
                                     <TD valign="top">{shift.title}</TD>
-                                    <TD valign="top">{shift.note}</TD>
+                                    <TD25 valign="top">
+                                        {shift.playbook && (
+                                            <Playbook>
+                                                Playbook: {shift.playbook}
+                                            </Playbook>
+                                        )}
+                                    </TD25>
+                                    <TD25 valign="top">{shift.note}</TD25>
                                 </TR>
                             ))}
                         {!shifts.filter(shift => shift.date === date)
@@ -33,7 +47,8 @@ const TimeTable: React.FC<Props> = ({ shifts }) => {
                             <TR>
                                 <TDtime valign="top"></TDtime>
                                 <TD valign="top">Nothing today :)</TD>
-                                <TD valign="top"></TD>
+                                <TD25 valign="top"></TD25>
+                                <TD25 valign="top"></TD25>
                             </TR>
                         )}
                     </tbody>
@@ -43,10 +58,30 @@ const TimeTable: React.FC<Props> = ({ shifts }) => {
     );
 };
 
+const Location = styled.span`
+    font-size: 12px;
+`;
+
+const Playbook = styled.span`
+    font-style: italic;
+`;
+
 const Table = styled.table`
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
+`;
+
+const Column = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+`;
+
+const Row = styled.div`
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
 `;
 
 const TDtime = styled.td`
@@ -58,6 +93,11 @@ const TDtime = styled.td`
 const TD = styled.td`
     padding: 10px;
     width: 50%;
+`;
+
+const TD25 = styled.td`
+    padding: 10px;
+    width: 25%;
 `;
 
 const TH = styled.th`

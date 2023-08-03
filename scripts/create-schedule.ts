@@ -3,18 +3,7 @@ import csv from "csv-parser";
 import { Shift, PersonalSchedule, groupLine, groupSchLine } from "./types";
 import { createShifts } from "./create-group-shifts";
 import createPersonalShifts from "./create-personal-shifts";
-
-async function readCSVFile(filePath: string): Promise<object[]> {
-    const results: object[] = [];
-
-    return new Promise((resolve, reject) => {
-        fs.createReadStream(filePath)
-            .pipe(csv())
-            .on("data", data => results.push(data))
-            .on("end", () => resolve(results))
-            .on("error", error => reject(error));
-    });
-}
+import { readCSVFile } from "./read-csv-file";
 
 const createSchedule = async () => {
     const schedule_data = (await readCSVFile(

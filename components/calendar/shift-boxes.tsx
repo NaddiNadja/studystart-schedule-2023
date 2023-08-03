@@ -20,7 +20,7 @@ const ShiftBoxes: React.FC<Props> = ({ shifts }) => {
 
 const createShiftBox = (shift: Shift, position: 0 | 1 | 2) => {
     const height =
-        shift.title === "Intro party"
+        shift.title === "Intro party" || shift.title === "Friday Go-to shift"
             ? 5 * 60
             : Number(shift.end.substring(0, 2)) * 60 +
               Number(shift.end.substring(3, 5)) -
@@ -40,17 +40,19 @@ const createShiftBox = (shift: Shift, position: 0 | 1 | 2) => {
             width={position === 0 ? 50 : position === 1 ? undefined : 50}
             left={position < 2 ? undefined : 50}
         >
+            {shift.title
+                .replace("Monday Games - ", "")
+                .replace("Escape Room - ", "")
+                .replace("Grill n' Chill - ", "")}
             <AlignedRow>
-                {shift.title
-                    .replace("Monday Games - ", "")
-                    .replace("Escape Room - ", "")
-                    .replace("Grill n' Chill - ", "")}
                 {!shift.title.includes("hygge") && (
-                    <TimeLabel>
+                    <Label>
                         {shift.start}-{shift.end}
-                    </TimeLabel>
+                    </Label>
                 )}
+                <Label>{shift.location}</Label>
             </AlignedRow>
+            {shift.playbook && <Playbook>Playbook: {shift.playbook}</Playbook>}
             <Note>{shift.note}</Note>
         </ShiftBox>
     );
@@ -63,6 +65,7 @@ const AlignedRow = styled.div`
     width: 100%;
     justify-content: space-between;
     gap: 4px;
+    margin-top: 4px;
 `;
 
 const ShiftBox = styled.div<{
@@ -93,13 +96,21 @@ const ShiftBox = styled.div<{
     }
 `;
 
-const TimeLabel = styled.span`
+const Label = styled.span`
     padding-top: 2px;
     font-size: 12px;
     word-wrap: break-word;
 `;
+
 const Note = styled.span`
-    padding-top: 3px;
+    padding-top: 4px;
+    font-size: 12px;
+    word-wrap: break-word;
+`;
+
+const Playbook = styled.span`
+    padding-top: 4px;
+    font-style: italic;
     font-size: 12px;
     word-wrap: break-word;
 `;

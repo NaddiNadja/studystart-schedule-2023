@@ -37,6 +37,7 @@ export const overlappingShifts = (shifts: Shift[]) => {
 const overlaps = (a: Shift, b: Shift) => {
     if (a.start < b.end && a.end > b.start) return true;
     if (b.start < a.end && b.end > a.start) return true;
+    if (a.end === "02:00" && b.end === "02:00") return true;
     return false;
 };
 

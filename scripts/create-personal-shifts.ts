@@ -81,6 +81,7 @@ const createPersonalShifts = (
             end: "21:00",
             note: "(everyone)",
             title: "Grill cleanup",
+            playbook: "Activity",
         },
         {
             date: "25-Aug",
@@ -88,6 +89,7 @@ const createPersonalShifts = (
             end: "02:00",
             note: "",
             title: "Intro party",
+            location: "ScrollBar",
         },
         {
             date: "25-Aug",

@@ -7,7 +7,7 @@ const getPeople = async () => {
     )) as groupLine[];
     var people: string[] = [];
     for (var i = 0; i < groups_data.length; i++) {
-        const person = groups_data[i].name;
+        const person = groups_data[i].name.replace("�", "ø");
         people = [...people, person];
     }
     const sorted_people = people.sort();

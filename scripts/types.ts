@@ -4,6 +4,8 @@ export type Shift = {
     date: string;
     title: string;
     note?: string;
+    location?: string;
+    playbook?: string;
 };
 
 export type PersonalSchedule = {
@@ -42,34 +44,42 @@ export type groupLine = {
 };
 export type groupSchLine = {
     group: string;
+    playbook: string;
     start1: string;
     end1: string;
     date1: string;
     title1: string;
+    location2: string;
     start2: string;
     end2: string;
     date2: string;
     title2: string;
+    location3: string;
     start3: string;
     end3: string;
     date3: string;
     title3: string;
+    location4: string;
     start4: string;
     end4: string;
     date4: string;
     title4: string;
+    location5: string;
     start5: string;
     end5: string;
     date5: string;
     title5: string;
+    location6: string;
     start6: string;
     end6: string;
     date6: string;
     title6: string;
+    location7: string;
     start7: string;
     end7: string;
     date7: string;
     title7: string;
+    location1: string;
 };
 export type ShiftLayout = {
     left: Shift[];
