@@ -85,7 +85,7 @@ const createPersonalShifts = (
         },
         {
             date: "25-Aug",
-            start: "21:00",
+            start: "20:00",
             end: "02:00",
             note: "",
             title: "Intro party",
