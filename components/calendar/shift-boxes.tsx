@@ -21,7 +21,7 @@ const ShiftBoxes: React.FC<Props> = ({ shifts }) => {
 const createShiftBox = (shift: Shift, position: 0 | 1 | 2) => {
     const height =
         shift.title === "Intro party" || shift.title === "Friday Go-to shift"
-            ? 5 * 60
+            ? 6 * 60
             : Number(shift.end.substring(0, 2)) * 60 +
               Number(shift.end.substring(3, 5)) -
               (Number(shift.start.substring(0, 2)) * 60 +
