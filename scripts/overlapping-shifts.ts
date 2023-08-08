@@ -6,11 +6,18 @@ export const overlappingShifts = (shifts: Shift[]) => {
         middle: [],
         right: [],
     };
+    if (!shifts.length) return results;
     let positions: (0 | 1 | 2)[] = []; // 0 = left, 1 = middle, 2 = right
+    let buddyHygge = shifts[0].title.includes("Buddy hygge");
+
     for (let i = 0; i < shifts.length; i += 1) positions.push(1);
 
     for (var i = 0; i < shifts.length; i++) {
         const shifta = shifts[i];
+        if (buddyHygge && i > 0 && shifta.start < "15:30") {
+            positions[i] = 2;
+            continue;
+        }
 
         for (var j = i + 1; j < shifts.length; j++) {
             var shiftb = shifts[j];
@@ -26,6 +33,7 @@ export const overlappingShifts = (shifts: Shift[]) => {
             }
         }
     }
+
     shifts.map((shift, i) => {
         if (positions[i] === 0) results.left = [...results.left, shift];
         if (positions[i] === 1) results.middle = [...results.middle, shift];

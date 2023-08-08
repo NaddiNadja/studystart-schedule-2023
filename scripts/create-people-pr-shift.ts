@@ -5,7 +5,7 @@ import getPersonRoles from "./get-person-roles";
 
 const createPeoplePrShift = async () => {
     const schedule_data = (await readCSVFile(
-        "resources/group-schedules.csv"
+        "resources/roles-with-shifts.csv"
     )) as groupSchLine[];
     var shifts: { shift: Shift; roles: string[] }[] = [];
     for (var i = 0; i < schedule_data.length; i++) {
@@ -14,7 +14,7 @@ const createPeoplePrShift = async () => {
             const existing = shifts.find(
                 s =>
                     s.shift.start === shift.start &&
-                    s.shift.end === s.shift.end &&
+                    s.shift.end === shift.end &&
                     s.shift.title === shift.title &&
                     s.shift.date === shift.date
             );
@@ -25,7 +25,7 @@ const createPeoplePrShift = async () => {
     }
 
     const groups_data = (await readCSVFile(
-        "resources/groups.csv"
+        "resources/people-with-roles.csv"
     )) as groupLine[];
     var sharedShifts: SharedShift[] = shifts.map(s => ({
         shift: s.shift,
@@ -42,42 +42,6 @@ const createPeoplePrShift = async () => {
             }
         }
     }
-
-    sharedShifts = [
-        ...sharedShifts,
-        {
-            shift: {
-                date: "23-Aug",
-                start: "20:00",
-                end: "21:00",
-                note: "(everyone)",
-                title: "Grill cleanup",
-                playbook: "Activity",
-            },
-            people: ["Everyone"],
-        },
-        {
-            shift: {
-                date: "25-Aug",
-                start: "20:00",
-                end: "02:00",
-                note: "",
-                title: "Intro party",
-                location: "ScrollBar",
-            },
-            people: ["Everyone"],
-        },
-        {
-            shift: {
-                date: "25-Aug",
-                start: "02:00",
-                end: "03:00",
-                note: "(everyone)",
-                title: "Friday cleanup",
-            },
-            people: ["Everyone"],
-        },
-    ];
 
     const sorted_shifts = sharedShifts.sort((a, b) => {
         if (a.shift.title === "Friday cleanup") return 1;

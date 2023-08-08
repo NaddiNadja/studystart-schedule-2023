@@ -5,7 +5,7 @@ import { readCSVFile } from "./read-csv-file";
 
 const createSchedule = async () => {
     const schedule_data = (await readCSVFile(
-        "resources/group-schedules.csv"
+        "resources/roles-with-shifts.csv"
     )) as groupSchLine[];
     const schedule_pr_group: Map<string, Shift[]> = new Map();
     for (var i = 0; i < schedule_data.length; i++) {
@@ -16,7 +16,7 @@ const createSchedule = async () => {
     }
 
     const groups_data = (await readCSVFile(
-        "resources/groups.csv"
+        "resources/people-with-roles.csv"
     )) as groupLine[];
     var schedule_pr_person: PersonalSchedule[] = [];
     for (var i = 0; i < groups_data.length; i++) {

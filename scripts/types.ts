@@ -46,6 +46,12 @@ export type groupLine = {
     note12: string;
     group13: string;
     note13: string;
+    group14: string;
+    note14: string;
+    group15: string;
+    note15: string;
+    group16: string;
+    note16: string;
 };
 export type groupSchLine = {
     group: string;

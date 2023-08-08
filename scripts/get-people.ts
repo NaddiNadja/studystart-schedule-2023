@@ -3,7 +3,7 @@ import { groupLine } from "./types";
 
 const getPeople = async () => {
     const groups_data = (await readCSVFile(
-        "resources/groups.csv"
+        "resources/people-with-roles.csv"
     )) as groupLine[];
     var people: string[] = [];
     for (var i = 0; i < groups_data.length; i++) {

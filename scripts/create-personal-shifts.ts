@@ -46,15 +46,25 @@ const createPersonalShifts = (
                     return true;
                 })
                 .filter(shift => {
-                    if (!shift.title.includes("Meet at Islands Brygge"))
+                    if (!shift.title.includes("Chill at Islands Brygge"))
                         return true;
                     if (
                         !!shifts.find(s =>
-                            s.title.includes("Meet at Islands Brygge")
+                            s.title.includes("Thursday Go-to shift")
                         )
                     )
                         return false;
                     return true;
+                })
+                .filter(shift => {
+                    const existing = shifts.find(
+                        s =>
+                            s.start === shift.start &&
+                            s.end === shift.end &&
+                            s.title === shift.title &&
+                            s.date === shift.date
+                    );
+                    return !existing;
                 });
             shifts = [...shifts, ...shifts_with_notes];
         }
@@ -72,33 +82,9 @@ const createPersonalShifts = (
     addShift(data.note11, data.group11);
     addShift(data.note12, data.group12);
     addShift(data.note13, data.group13);
-
-    shifts = [
-        ...shifts,
-        {
-            date: "23-Aug",
-            start: "20:00",
-            end: "21:00",
-            note: "(everyone)",
-            title: "Grill cleanup",
-            playbook: "Activity",
-        },
-        {
-            date: "25-Aug",
-            start: "20:00",
-            end: "02:00",
-            note: "",
-            title: "Intro party",
-            location: "ScrollBar",
-        },
-        {
-            date: "25-Aug",
-            start: "02:00",
-            end: "03:00",
-            note: "(everyone)",
-            title: "Friday cleanup",
-        },
-    ];
+    addShift(data.note14, data.group14);
+    addShift(data.note15, data.group15);
+    addShift(data.note16, data.group16);
 
     const sorted_shifts = shifts.sort((a, b) => {
         if (a.title === "Friday cleanup") return 1;

@@ -16,6 +16,9 @@ const getPersonRoles = (data: groupLine) => ({
         data.group11,
         data.group12,
         data.group13,
+        data.group14,
+        data.group15,
+        data.group16,
     ],
 });
 
