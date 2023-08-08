@@ -1,3 +1,4 @@
+import getPersonRoles from "./get-person-roles";
 import { Shift, groupLine } from "./types";
 
 const addNote = (shifts: Shift[], note: string) => {
@@ -9,8 +10,8 @@ const createPersonalShifts = (
     schedule_pr_group: Map<string, Shift[]>
 ) => {
     var shifts: Shift[] = [];
-    var isAcademic =
-        data.group1.includes("academic") || data.group2.includes("academic");
+    var person = getPersonRoles(data);
+    var isAcademic = person.roles.find(r => r.includes("academic"));
     var group_shifts = schedule_pr_group.get(data.group1);
     if (!group_shifts)
         throw new Error(`An unkown group name was given: ${data.group1}`);
@@ -21,7 +22,7 @@ const createPersonalShifts = (
             var shifts_in_group = schedule_pr_group.get(dataGroup);
             if (!shifts_in_group)
                 throw new Error(`An unkown group name was given: ${dataGroup}`);
-            const shifts_with_notes = addNote(shifts_in_group, note)
+            var shifts_with_notes = addNote(shifts_in_group, note)
                 .filter(
                     shift =>
                         !isAcademic ||
@@ -57,6 +58,17 @@ const createPersonalShifts = (
                     return true;
                 })
                 .filter(shift => {
+                    if (!shift.title.includes("Chill at Islands Brygge"))
+                        return true;
+                    if (
+                        !!shifts.find(s =>
+                            s.title.includes("Thursday Go-to shift")
+                        )
+                    )
+                        return false;
+                    return true;
+                })
+                .filter(shift => {
                     const existing = shifts.find(
                         s =>
                             s.start === shift.start &&
@@ -66,6 +78,15 @@ const createPersonalShifts = (
                     );
                     return !existing;
                 });
+            if (person.roles.find(r => r === "sps")) {
+                shifts_with_notes = shifts_with_notes.filter(shift => {
+                    return (
+                        shift.date !== "22-Aug" ||
+                        !shift.title.includes("Walker meeting")
+                    );
+                });
+            }
+
             shifts = [...shifts, ...shifts_with_notes];
         }
     };
