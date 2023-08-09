@@ -42,7 +42,11 @@ const createPersonalShifts = (
                 .filter(shift => {
                     if (!shift.title.includes("Game masters + Helpers meeting"))
                         return true;
-                    if (!!shifts.find(s => s.title.includes("Task master")))
+                    if (
+                        !!shifts.find(s =>
+                            s.title.includes("Task master with GBI")
+                        )
+                    )
                         return false;
                     return true;
                 })
