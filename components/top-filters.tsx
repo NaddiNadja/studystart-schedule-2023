@@ -46,9 +46,11 @@ const TopFilters: React.FC<Props> = ({
     return (
         <Container>
             <Select value={selected} onChange={handleChange}>
-                <Option value="" label="Select someone" />
+                <option value="" label="Select someone" />
                 {people.map(person => (
-                    <Option key={person} value={person} label={person} />
+                    <option key={person} value={person} label={person}>
+                        {person}
+                    </option>
                 ))}
             </Select>
             <RadioGroup>
@@ -91,10 +93,6 @@ const Select = styled.select`
     padding: 4px 12px;
     width: 100%;
     font-family: Inter;
-`;
-
-const Option = styled.option`
-    font-family: Arial;
 `;
 
 const Button = styled.button`
