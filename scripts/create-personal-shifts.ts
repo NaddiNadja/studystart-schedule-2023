@@ -44,7 +44,7 @@ const createPersonalShifts = (
                         return true;
                     if (
                         !!shifts.find(s =>
-                            s.title.includes("Task master with GBI")
+                            s.title.includes("Taskmaster with GBI")
                         )
                     )
                         return false;
