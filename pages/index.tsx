@@ -5,7 +5,7 @@ import TopFilters from "components/top-filters";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import Head from "next/head";
 import React from "react";
-import createSchedule from "scripts/create-schedule";
+import readData from "scripts/read-data";
 import getPeople from "scripts/get-people";
 import { PersonalSchedule } from "scripts/types";
 
@@ -81,8 +81,8 @@ export const getStaticProps: GetStaticProps<{
     schedule: PersonalSchedule[];
 }> = async context => {
     const people = await getPeople();
-    const schedule = await createSchedule();
-    return { props: { people, schedule } };
+    const { personal_schedules } = await readData();
+    return { props: { people, schedule: personal_schedules } };
 };
 
 export default Home;

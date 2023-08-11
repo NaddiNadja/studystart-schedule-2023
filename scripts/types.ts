@@ -10,15 +10,16 @@ export type Shift = {
 
 export type PersonalSchedule = {
     person: string;
+    themegroup?: string;
     shifts: Shift[];
 };
 
 export type SharedShift = {
     shift: Shift;
-    people: string[];
+    people: { name: string; themegroup: string }[];
 };
 
-export type groupLine = {
+export type personRoleLine = {
     name: string;
     group1: string;
     note1: string;
@@ -53,7 +54,7 @@ export type groupLine = {
     group16: string;
     note16: string;
 };
-export type groupSchLine = {
+export type roleShiftsLine = {
     group: string;
     playbook: string;
     start1: string;

@@ -5,18 +5,11 @@ import { styled } from "styled-components";
 
 interface Props {
     shift: Shift;
-    people?: string[];
+    people?: { name: string; themegroup: string }[];
 }
 
 const ShiftDropDown: React.FC<Props> = ({ shift, people }) => {
-    const formatStringArray = (strs: string[]) => {
-        return `${strs.join(", ")}`;
-    };
-    const [names, setNames] = React.useState<string[]>([]);
-
-    React.useEffect(() => {
-        if (people) setNames(people);
-    }, [people]);
+    const names = React.useMemo(() => people || [], [people]);
 
     if (!people) return <></>;
 
@@ -31,9 +24,23 @@ const ShiftDropDown: React.FC<Props> = ({ shift, people }) => {
                 </Row>
                 <Header>Assigned</Header>
                 <NameGrid>
-                    {names.map(name => (
-                        <span key={name}>{name}</span>
-                    ))}
+                    {names
+                        .sort((a, b) => Number(a.name > b.name))
+                        .map(({ name, themegroup }) => (
+                            <Span key={name}>
+                                {name}
+                                {(shift.title
+                                    .toLowerCase()
+                                    .includes("walker") ||
+                                    shift.title
+                                        .toLowerCase()
+                                        .includes("theme group")) && (
+                                    <ThemeGroup className="themegroup">
+                                        {themegroup}
+                                    </ThemeGroup>
+                                )}
+                            </Span>
+                        ))}
                 </NameGrid>
             </Padding>
         </DropDown>
@@ -69,6 +76,26 @@ const Header = styled.div`
     text-transform: uppercase;
     letter-spacing: 1px;
     font-size: 11px;
+`;
+
+const Span = styled.span`
+    position: relative;
+    &:hover {
+        & .themegroup {
+            display: block;
+        }
+    }
+`;
+
+const ThemeGroup = styled.div`
+    display: none;
+    position: absolute;
+    bottom: 20px;
+    background-color: var(--primary-line);
+    padding: 4px 10px;
+    border-radius: 4px;
+    width: 120px;
+    z-index: 10;
 `;
 
 export default ShiftDropDown;
