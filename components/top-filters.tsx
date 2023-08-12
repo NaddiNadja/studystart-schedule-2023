@@ -69,7 +69,12 @@ const TopFilters: React.FC<Props> = ({
     };
 
     const downloadIcs = async () => {
-        const filename = "ExampleEvent.ics";
+        const filename = `introweek-schedule-${selected
+            .replace(".", "")
+            .replace(/[(].*[)]/, "")
+            .trim()
+            .replace(" ", "-")
+            .toLowerCase()}.ics`;
         const file: File = await new Promise((resolve, reject) => {
             const { error, value } = exportToIcs();
             if (error) reject(error);
