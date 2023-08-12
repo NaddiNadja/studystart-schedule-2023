@@ -47,6 +47,7 @@ const readData = async () => {
                 const personal_schedule = personal_schedules.find(
                     ({ person }) => person === name
                 );
+                const note = roles.find(r => r.role === role)?.note;
                 const currentShifts = personal_schedule?.shifts || [];
                 if (
                     shouldInclude(
@@ -55,6 +56,8 @@ const readData = async () => {
                         roles.map(({ role }) => role)
                     )
                 ) {
+                    if (note && note.match(/\da\d\d/g)) shift.location = note;
+                    else shift.note = note;
                     currentShifts.push(shift);
                     shared_shifts
                         .find(ss => ss.shift === shift)
@@ -69,16 +72,7 @@ const readData = async () => {
 
     const ss_sorted = shared_shifts
         .map(({ shift, people }) => ({ shift, people: people.sort() }))
-        .sort((a, b) => {
-            if (a.shift.title === "Friday cleanup") return 1;
-            if (a.shift.date < b.shift.date) return -1;
-            if (a.shift.date > b.shift.date) return 1;
-            if (a.shift.start < b.shift.start) return -1;
-            if (a.shift.start > b.shift.start) return 1;
-            if (a.shift.end < b.shift.end) return -1;
-            if (a.shift.end > b.shift.end) return 1;
-            return 0;
-        });
+        .sort(shiftCompare);
 
     const ps_sorted = personal_schedules.sort((a, b) => {
         return a.person.localeCompare(b.person);
@@ -101,7 +95,8 @@ const mapShiftsToRoles = (data: roleShiftsLine[]) => {
                     s.shift.start === shift.start &&
                     s.shift.end === shift.end &&
                     s.shift.title === shift.title &&
-                    s.shift.date === shift.date
+                    s.shift.date === shift.date &&
+                    s.shift.location === shift.location
             );
             if (!existing) shifts.push({ shift, roles: [data[i].group] });
             else existing.roles.push(data[i].group);
@@ -109,6 +104,17 @@ const mapShiftsToRoles = (data: roleShiftsLine[]) => {
     }
 
     return shifts;
+};
+
+const shiftCompare = (a: SharedShift, b: SharedShift) => {
+    if (a.shift.title === "Friday cleanup") return 1;
+    if (a.shift.date < b.shift.date) return -1;
+    if (a.shift.date > b.shift.date) return 1;
+    if (a.shift.start < b.shift.start) return -1;
+    if (a.shift.start > b.shift.start) return 1;
+    if (a.shift.end < b.shift.end) return -1;
+    if (a.shift.end > b.shift.end) return 1;
+    return 0;
 };
 
 const shouldInclude = (
@@ -129,7 +135,7 @@ const shouldInclude = (
     // Setup helpers for Escape Room shouldn't attend the walker meeting
     if (
         shift.title.includes("Walker meeting") &&
-        !!currentShifts.find(s => s.title.includes("Escape Room - Setup"))
+        !!currentShifts.find(s => s.title.includes("Setup"))
     )
         return false;
 
@@ -161,7 +167,8 @@ const shouldInclude = (
             s.start === shift.start &&
             s.end === shift.end &&
             s.title === shift.title &&
-            s.date === shift.date
+            s.date === shift.date &&
+            s.location === shift.location
     );
     return !existing;
 };
