@@ -72,11 +72,16 @@ const readData = async () => {
 
     const ss_sorted = shared_shifts
         .map(({ shift, people }) => ({ shift, people: people.sort() }))
-        .sort(shiftCompare);
+        .sort(sharedShiftCompare);
 
-    const ps_sorted = personal_schedules.sort((a, b) => {
-        return a.person.localeCompare(b.person);
-    });
+    const ps_sorted = personal_schedules
+        .map(({ person, shifts }) => ({
+            person,
+            shifts: shifts.sort(shiftCompare),
+        }))
+        .sort((a, b) => {
+            return a.person.localeCompare(b.person);
+        });
 
     return {
         shared_shifts: ss_sorted,
@@ -106,14 +111,17 @@ const mapShiftsToRoles = (data: roleShiftsLine[]) => {
     return shifts;
 };
 
-const shiftCompare = (a: SharedShift, b: SharedShift) => {
-    if (a.shift.title === "Friday cleanup") return 1;
-    if (a.shift.date < b.shift.date) return -1;
-    if (a.shift.date > b.shift.date) return 1;
-    if (a.shift.start < b.shift.start) return -1;
-    if (a.shift.start > b.shift.start) return 1;
-    if (a.shift.end < b.shift.end) return -1;
-    if (a.shift.end > b.shift.end) return 1;
+const sharedShiftCompare = (a: SharedShift, b: SharedShift) =>
+    shiftCompare(a.shift, b.shift);
+
+const shiftCompare = (a: Shift, b: Shift) => {
+    if (a.title === "Friday cleanup") return 1;
+    if (a.date < b.date) return -1;
+    if (a.date > b.date) return 1;
+    if (a.start < b.start) return -1;
+    if (a.start > b.start) return 1;
+    if (a.end < b.end) return -1;
+    if (a.end > b.end) return 1;
     return 0;
 };
 
