@@ -39,26 +39,27 @@ const readData = async () => {
     );
 
     shift_to_roles.map(({ shift, roles }) =>
-        roles.map(role => {
+        roles.map(role_string => {
             const people_with_role = person_to_roles.filter(
-                ({ roles }) => !!roles.find(r => r.role === role)
+                ({ roles }) => !!roles.find(r => r.role === role_string)
             );
             people_with_role.map(({ name, roles }) => {
                 const personal_schedule = personal_schedules.find(
                     ({ person }) => person === name
                 );
-                const note = roles.find(r => r.role === role)?.note;
-                const currentShifts = personal_schedule?.shifts || [];
+                const note = roles.find(r => r.role === role_string)?.note;
                 if (
                     shouldInclude(
                         shift,
-                        currentShifts,
+                        personal_schedule?.shifts || [],
                         roles.map(({ role }) => role)
                     )
                 ) {
-                    if (note && note.match(/\da\d\d/g)) shift.location = note;
-                    //else shift.note = note;
-                    currentShifts.push(shift);
+                    const copied_shift = { ...shift };
+                    if (note && note.match(/\da\d\d/g))
+                        copied_shift.location = note;
+                    else copied_shift.note = note;
+                    personal_schedule?.shifts.push(copied_shift);
                     shared_shifts
                         .find(ss => ss.shift === shift)
                         ?.people.push({
@@ -79,9 +80,7 @@ const readData = async () => {
             person,
             shifts: shifts.sort(shiftCompare),
         }))
-        .sort((a, b) => {
-            return a.person.localeCompare(b.person);
-        });
+        .sort((a, b) => a.person.localeCompare(b.person));
 
     return {
         shared_shifts: ss_sorted,
