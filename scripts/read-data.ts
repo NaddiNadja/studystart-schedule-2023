@@ -57,7 +57,7 @@ const readData = async () => {
                     )
                 ) {
                     if (note && note.match(/\da\d\d/g)) shift.location = note;
-                    else shift.note = note;
+                    //else shift.note = note;
                     currentShifts.push(shift);
                     shared_shifts
                         .find(ss => ss.shift === shift)
