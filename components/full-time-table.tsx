@@ -1,6 +1,6 @@
 import React from "react";
 import { styled } from "styled-components";
-import { SharedShift, days } from "scripts/types";
+import { SharedShift, Shift, days } from "scripts/types";
 import PageView from "./page-view";
 import ShiftDropDown from "./shift-drop-down";
 
@@ -9,19 +9,39 @@ interface Props {
 }
 
 const TimeTable: React.FC<Props> = ({ shifts }) => {
-    if (!shifts) return <></>;
+    const uniqueShifts = React.useMemo(
+        () =>
+            shifts?.reduce((acc, cur) => {
+                if (
+                    acc.find((ss: SharedShift) => areSharedShiftsEqual(ss, cur))
+                )
+                    return acc;
+                else return [...acc, cur];
+            }, [] as SharedShift[]),
+        [shifts]
+    );
+
+    if (!shifts || !uniqueShifts) return <></>;
+
     return (
         <PageView>
             {days.map(({ day, date }, i) => (
                 <section key={i}>
                     <Header>{day}</Header>
-                    {shifts
+                    {uniqueShifts
                         ?.filter(({ shift }) => shift.date === date)
-                        .map(({ shift, people }, index) => (
+                        .map(({ shift }, index) => (
                             <ShiftDropDown
                                 key={index}
                                 shift={shift}
-                                people={people}
+                                people={shifts
+                                    .filter(ss => areEqual(ss.shift, shift))
+                                    .map(ss => ss.people)
+                                    .flat()}
+                                locations={shifts
+                                    .filter(ss => areEqual(ss.shift, shift))
+                                    .map(ss => ss.shift.location)
+                                    .flat()}
                             />
                         ))}
                 </section>
@@ -29,6 +49,15 @@ const TimeTable: React.FC<Props> = ({ shifts }) => {
         </PageView>
     );
 };
+
+const areEqual = (a: Shift, b: Shift) =>
+    a.title === b.title &&
+    a.date === b.date &&
+    a.start === b.start &&
+    a.end === b.end;
+
+const areSharedShiftsEqual = (a: SharedShift, b: SharedShift) =>
+    areEqual(a.shift, b.shift);
 
 const Header = styled.div`
     padding: 10px;

@@ -6,10 +6,20 @@ import { styled } from "styled-components";
 interface Props {
     shift: Shift;
     people?: { name: string; themegroup: string }[];
+    locations: (string | undefined)[];
 }
 
-const ShiftDropDown: React.FC<Props> = ({ shift, people }) => {
+const ShiftDropDown: React.FC<Props> = ({ shift, people, locations }) => {
     const names = React.useMemo(() => people || [], [people]);
+    const themegroups = React.useMemo(() => {
+        return names
+            .map(({ themegroup }) => themegroup)
+            .reduce((acc, cur) => {
+                if (acc.find(group => group === cur)) return acc;
+                else return [...acc, cur];
+            }, [] as string[])
+            .sort();
+    }, [names]);
 
     if (!people) return <></>;
 
@@ -17,33 +27,48 @@ const ShiftDropDown: React.FC<Props> = ({ shift, people }) => {
         <DropDown timeframe={`${shift.start}-${shift.end}`} title={shift.title}>
             <Padding>
                 <Row>
-                    <span>Location: {shift.location || "TBA"}</span>
+                    <span>
+                        Location{locations.length > 1 ? "s" : ""}:{" "}
+                        {locations.join(", ") || "TBA"}
+                    </span>
                     {shift.playbook && (
                         <Italic>Playbook: {shift.playbook}</Italic>
                     )}
                 </Row>
                 <Header>Assigned</Header>
-                <NameGrid>
-                    {names
-                        .sort((a, b) => Number(a.name > b.name))
-                        .map(({ name, themegroup }) => (
-                            <Span key={name}>
-                                {name}
-                                {(shift.title
-                                    .toLowerCase()
-                                    .includes("walker") ||
-                                    shift.title
-                                        .toLowerCase()
-                                        .includes("theme group")) && (
-                                    <ThemeGroup className="themegroup">
-                                        {themegroup}
-                                    </ThemeGroup>
-                                )}
-                            </Span>
+                {shouldDivideInThemeGroups(shift) ? (
+                    <NameGrid>
+                        {themegroups.map(group => (
+                            <ThemeGroupColumn key={group}>
+                                <span>{group}</span>
+                                {names
+                                    .filter(
+                                        ({ themegroup }) => themegroup === group
+                                    )
+                                    .map(({ name }, i) => (
+                                        <span key={i}>{name}</span>
+                                    ))}
+                            </ThemeGroupColumn>
                         ))}
-                </NameGrid>
+                    </NameGrid>
+                ) : (
+                    <NameGrid>
+                        {names
+                            .sort((a, b) => Number(a.name > b.name))
+                            .map(({ name, themegroup }) => (
+                                <Span key={name}>{name}</Span>
+                            ))}
+                    </NameGrid>
+                )}
             </Padding>
         </DropDown>
+    );
+};
+
+const shouldDivideInThemeGroups = (shift: Shift) => {
+    return (
+        shift.title.toLowerCase().includes("walker") ||
+        shift.title.toLowerCase().includes("theme group")
     );
 };
 
@@ -71,6 +96,16 @@ const Row = styled.div`
     flex-wrap: wrap;
 `;
 
+const ThemeGroupColumn = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 16px;
+    & span:first-child {
+        font-weight: bold;
+    }
+`;
+
 const Header = styled.div`
     margin-top: 16px;
     text-transform: uppercase;
@@ -80,22 +115,6 @@ const Header = styled.div`
 
 const Span = styled.span`
     position: relative;
-    &:hover {
-        & .themegroup {
-            display: block;
-        }
-    }
-`;
-
-const ThemeGroup = styled.div`
-    display: none;
-    position: absolute;
-    bottom: 20px;
-    background-color: var(--primary-line);
-    padding: 4px 10px;
-    border-radius: 4px;
-    width: 120px;
-    z-index: 10;
 `;
 
 export default ShiftDropDown;
